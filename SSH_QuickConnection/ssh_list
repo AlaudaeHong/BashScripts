@@ -1,0 +1,8 @@
+Dorm 
+ssh alaudae@128.113.137.143 -p 8001
+
+Home 
+ssh alaudae@192.168.50.171
+
+Raspberry Pi -- Campus 
+ssh alaudae@128.113.137.143 -p 8000

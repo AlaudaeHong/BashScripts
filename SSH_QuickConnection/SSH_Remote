@@ -1,0 +1,60 @@
+#!/bin/bash
+
+num=2
+
+i=0
+
+#every line read from the file does not have "\n"
+while read line
+do
+	if [ "$line" == "" ]; then
+		continue
+	fi
+
+	if (( ((i % 2)) == 0)); then
+		_alias[((i / 2))]=$line
+
+	else
+		list[((i / 2))]=$line	
+	fi
+
+	((i++))
+
+done < ~/bin/ssh_list
+
+for (( i=0; i<${#_alias[@]}; i++ ))
+do
+	echo "${i}. ${_alias[$i]}"
+done
+
+success=0
+
+while [ $success -ne 1 ]
+do
+
+	read option
+	
+	for (( i=0; i<${#list[@]}; i++ ))
+	do
+		if [ $option -eq $i ]; then
+			
+			echo "Connecting to ${_alias[$i]}"
+
+			${list[$i]}
+			success=1
+
+			break
+		fi
+	done
+
+	if [ $success -ne 1 ]; then
+		echo "Wrong input, try again"
+	fi
+
+done
+
+#Just FYI, if want to remove one element, do:
+#unset list[1]
+#if want to print the index, do:
+#${!list[@]}
+
