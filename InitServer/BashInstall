@@ -1,0 +1,44 @@
+#!/bin/bash
+
+which vi > /dev/null
+if [ $? -eq 1 ]; then
+    echo "Missing vim, try to install"
+    sudo apt-get install vi
+
+    if [ $? -eq 1 ]; then
+        exit
+    fi
+fi
+
+which git > /dev/null
+if [ $? -eq 1 ]; then
+    echo "Missing git, try to install"
+    sudo apt-get install git
+    
+    if [ $? -eq 1 ]; then
+        exit
+    fi
+fi
+
+exit
+
+cd ~/bin
+
+if [ $? -eq 1 ]; then
+    cd ~/
+    mkdir bin
+    cd bin
+fi
+
+#install SSH_Remote script
+wget https://raw.githubusercontent.com/AlaudaeHong/BashScripts/master/SSH_QuickConnection/SSH_Remote
+
+#install SysUpdate script
+wget https://raw.githubusercontent.com/AlaudaeHong/BashScripts/master/SysUpdate/SysUpdate
+
+cd
+wget https://raw.githubusercontent.com/AlaudaeHong/vimrc/master/.vimrc
+clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+vim +PluginInstall +qall
+
+
