@@ -3,9 +3,10 @@
 which vi > /dev/null
 if [ $? -eq 1 ]; then
     echo "Missing vim, try to install"
-    sudo apt-get install vi
+    sudo apt-get install vim
 
     if [ $? -eq 1 ]; then
+        echo "Cannot install vim....EXITING"
         exit
     fi
 fi
@@ -16,6 +17,7 @@ if [ $? -eq 1 ]; then
     sudo apt-get install git
     
     if [ $? -eq 1 ]; then
+        echo "Cannot install git....EXITING"
         exit
     fi
 fi
