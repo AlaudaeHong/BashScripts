@@ -20,8 +20,6 @@ if [ $? -eq 1 ]; then
     fi
 fi
 
-exit
-
 cd ~/bin
 
 if [ $? -eq 1 ]; then
@@ -37,8 +35,15 @@ wget https://raw.githubusercontent.com/AlaudaeHong/BashScripts/master/SSH_QuickC
 wget https://raw.githubusercontent.com/AlaudaeHong/BashScripts/master/SysUpdate/SysUpdate
 
 cd
+
+ls .vim
+
+if [ $? -eq 1 ]; then
+    mkdir .vim
+fi
+
 wget https://raw.githubusercontent.com/AlaudaeHong/vimrc/master/.vimrc
-clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 vim +PluginInstall +qall
 
 
