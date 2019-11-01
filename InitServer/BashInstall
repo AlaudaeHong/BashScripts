@@ -12,21 +12,21 @@ fi
 echo "Installing self-made script"
 #install SSH_Remote script
 ls ~/bin/SSH_Remote
-if [ $? -eq 1 ]; then
+if [ $? -ne 0 ]; then
     wget https://raw.githubusercontent.com/AlaudaeHong/BashScripts/master/SSH_QuickConnection/SSH_Remote
     chmod +x SSH_Remote
 fi
 
 #install SysUpdate script
 ls ~/bin/SysUpdate
-if [ $? -eq 1 ]; then
+if [ $? -ne 0 ]; then
     wget https://raw.githubusercontent.com/AlaudaeHong/BashScripts/master/SysUpdate/SysUpdate
     chmod +x SysUpdate
 fi
 
 #update the system
 echo "Updating System"
-./SysUpdate
+SysUpdate
 
 which vi > /dev/null
 if [ $? -eq 1 ]; then
