@@ -1,5 +1,27 @@
 #!/bin/bash
 
+cd ~/bin
+
+if [ $? -eq 1 ]; then
+    echo "Making ~/bin directory"
+    cd ~/
+    mkdir bin
+    cd bin
+fi
+
+echo "Installing self-made script"
+#install SSH_Remote script
+wget https://raw.githubusercontent.com/AlaudaeHong/BashScripts/master/SSH_QuickConnection/SSH_Remote
+chmod +x SSH_Remote
+
+#install SysUpdate script
+wget https://raw.githubusercontent.com/AlaudaeHong/BashScripts/master/SysUpdate/SysUpdate
+chmod +x SysUpdate
+
+#update the system
+echo "Updating System"
+./SysUpdate
+
 which vi > /dev/null
 if [ $? -eq 1 ]; then
     echo "Missing vim, try to install"
@@ -22,24 +44,6 @@ if [ $? -eq 1 ]; then
     fi
 fi
 
-cd ~/bin
-
-if [ $? -eq 1 ]; then
-    echo "Making ~/bin directory"
-    cd ~/
-    mkdir bin
-    cd bin
-fi
-
-echo "Installing self-made script"
-#install SSH_Remote script
-wget https://raw.githubusercontent.com/AlaudaeHong/BashScripts/master/SSH_QuickConnection/SSH_Remote
-chmod +x SSH_Remote
-
-#install SysUpdate script
-wget https://raw.githubusercontent.com/AlaudaeHong/BashScripts/master/SysUpdate/SysUpdate
-chmod +x SysUpdate
-
 cd
 
 ls .vim
@@ -52,5 +56,3 @@ echo "Configuring VIM"
 wget https://raw.githubusercontent.com/AlaudaeHong/vimrc/master/.vimrc
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 vim +PluginInstall +qall
-
-
