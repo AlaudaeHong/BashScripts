@@ -1,5 +1,31 @@
 #!/bin/bash
 
+if [ $# -eq 1 ]; then
+
+    echo "Quiet Exec"
+
+    if [ $1 -eq 1 ]; then
+        sudo mount -t ntfs /dev/sda1 /mnt/
+
+        if [ $? -ne 0 ]; then 
+            exit
+        fi
+
+        echo "storage attached"
+        sudo sudo service smbd start
+        if [ $? -ne 0 ]; then
+            sudo service smbd reload
+        fi
+        exit
+    else
+        if [ $1 -eq 2 ]; then
+            sudo service smbd stop 
+            sudo eject /dev/sda1
+            exit
+        fi
+    fi
+fi
+
 echo "This is file sharing control center"
 echo "1. input 1 to start file sharing"
 echo "2. input 2 to end file sharing"
@@ -7,30 +33,30 @@ echo "2. input 2 to end file sharing"
 read INT 
 
 while [[ INT -ne 1 && INT -ne 2 ]]; do
-	echo "illegal input, input again"
-	read INT 
+    echo "illegal input, input again"
+    read INT 
 done
 
 if [ $INT -eq 1 ]; then
-	sudo mount -t ntfs /dev/sda1 /mnt/
+    sudo mount -t ntfs /dev/sda1 /mnt/
 
-	if [ $? -ne 0 ]; then 
-		return
-	fi
+    if [ $? -ne 0 ]; then 
+        exit
+    fi
 
-	echo "storage attached"
-	sudo sudo service smbd start
-	if [ $? -ne 0 ]; then
-		sudo service smbd reload
-	fi
-	
+    echo "storage attached"
+    sudo sudo service smbd start
+    if [ $? -ne 0 ]; then
+        sudo service smbd reload
+    fi
+    
 else
-	if [ $INT -eq 2 ]; then
-		sudo service smbd stop 
-		sudo eject /dev/sda1
-		echo "external storage is detached"
-		echo "System going to sleep, input anykey to continue, or control C to terminate"
-		read INT 
-		sudo halt
-	fi
+    if [ $INT -eq 2 ]; then
+        sudo service smbd stop 
+        sudo eject /dev/sda1
+        echo "external storage is detached"
+        echo "System going to sleep, input anykey to continue, or control C to terminate"
+        read INT 
+        sudo halt
+    fi
 fi
