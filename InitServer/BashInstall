@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd ~/bin
+cd ~/bin > /dev/null
 
 if [ $? -eq 1 ]; then
     echo "Making ~/bin directory"
@@ -11,18 +11,21 @@ fi
 
 echo "Installing self-made script"
 #install SSH_Remote script
-ls ~/bin/SSH_Remote
+ls ~/bin/SSH_Remote > /dev/null
 if [ $? -ne 0 ]; then
     wget https://raw.githubusercontent.com/AlaudaeHong/BashScripts/master/SSH_QuickConnection/SSH_Remote
     chmod +x SSH_Remote
 fi
 
 #install SysUpdate script
-ls ~/bin/SysUpdate
+ls ~/bin/SysUpdate > /dev/null
 if [ $? -ne 0 ]; then
     wget https://raw.githubusercontent.com/AlaudaeHong/BashScripts/master/SysUpdate/SysUpdate
     chmod +x SysUpdate
 fi
+
+#Source .profile again
+source ~/.bash_profile
 
 #update the system
 echo "Updating System"
