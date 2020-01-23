@@ -1,0 +1,35 @@
+#!/bin/bash
+
+cd ~/bin > /dev/null
+
+if [ $? -eq 1 ]; then
+    echo "Making ~/bin directory"
+    cd ~/
+    mkdir bin
+    cd bin
+fi
+
+which vi > /dev/null
+if [ $? -eq 1 ]; then
+    echo "vi not install on this machine"
+    exit
+fi
+
+which git > /dev/null
+if [ $? -eq 1 ]; then
+    echo "git not install on this machine"
+    exit
+fi
+
+cd
+
+ls .vim
+if [ $? -eq 1 ]; then
+    echo "Making .vim directory"
+    mkdir .vim
+fi
+
+echo "Configuring VIM"
+wget https://raw.githubusercontent.com/AlaudaeHong/vimrc/master/.vimrc
+git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+vim +PluginInstall +qall
