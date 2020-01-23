@@ -31,6 +31,7 @@ source ~/.bash_profile
 echo "Updating System"
 SysUpdate
 
+#Install VIM
 which vi > /dev/null
 if [ $? -eq 1 ]; then
     echo "Missing vim, try to install"
@@ -42,6 +43,7 @@ if [ $? -eq 1 ]; then
     fi
 fi
 
+#Install Git
 which git > /dev/null
 if [ $? -eq 1 ]; then
     echo "Missing git, try to install"
@@ -49,6 +51,18 @@ if [ $? -eq 1 ]; then
     
     if [ $? -eq 1 ]; then
         echo "Cannot install git....EXITING"
+        exit
+    fi
+fi
+
+#Dependency for VIM plugin Tagbar
+which ctags > /dev/null
+if [ $? -eq 1 ]; then
+    echo "Missing ctags, try to install"
+    sudo apt-get install ctags
+    
+    if [ $? -eq 1 ]; then
+        echo "Cannot install ctags....EXITING"
         exit
     fi
 fi
