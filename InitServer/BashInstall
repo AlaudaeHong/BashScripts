@@ -79,7 +79,7 @@ if [ $? -eq 1 ]; then
         sudo apt-get install cscope
     
         if [ $? -eq 1 ]; then
-            echo "Cannot install ctags.... Manual installation needed"
+            echo "Cannot install CScope.... Manual installation needed"
         fi
     fi
 fi
