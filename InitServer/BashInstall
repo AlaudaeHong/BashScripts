@@ -67,6 +67,23 @@ if [ $? -eq 1 ]; then
     fi
 fi
 
+#Option of CScope
+which cscope > /dev/null
+if [ $? -eq 1 ]; then
+    echo "Install CScope? [Y/n]"
+    read ans
+    
+    if [ $ans == "Y" ]; then 
+        echo "Installing CScope"
+        
+        sudo apt-get install cscope
+    
+        if [ $? -eq 1 ]; then
+            echo "Cannot install ctags.... Manual installation needed"
+        fi
+    fi
+fi
+
 cd
 
 ls .vim
