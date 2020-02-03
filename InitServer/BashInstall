@@ -1,28 +1,93 @@
 #!/bin/bash
 
-cd ~/bin > /dev/null
+rootdir="/root"
+usrdir="/home/ubuntu"
 
-if [ $? -eq 1 ]; then
-    echo "Making ~/bin directory"
-    cd ~/
-    mkdir bin
-    cd bin
+ifcscope=0
+
+#These functions need root privilege
+
+#Parameter:
+#$1: root directory
+#$2: directory to be check, if not exist, create
+function checkDIR {
+    cd ${1}/${2} > /dev/null
+
+    if [ $? -eq 1 ]; then
+        echo "Making ${1} directory"
+        mkdir ${1}/${2}
+    fi
+}
+
+#Parameter
+#$1: directory of installation
+#$2: script to be installed
+#$3: name
+function install_script {
+    cd $1
+
+    rm $3
+    wget https://raw.githubusercontent.com/AlaudaeHong/BashScripts/master/${2}
+    chmod +x $3
+
+    #Create a softlink for user
+    if [ $1 == ${rootdir}/bin ]; then
+        ln -s ${rootdir}/bin/${3} ${usrdir}/bin/${3}
+    fi
+}
+
+#Parameter
+#$1: package to be installed
+#$2: option: silent/ask
+function install_apt {
+    which $1
+    if [ $? -eq 1 ] && [ $2 -eq 1 ]; then
+        echo "Missing ${1}, trying to install"
+        apt-get install $1
+
+        if [ $? -eq 1 ]; then
+            echo "Cannot install ${1}....EXITING"
+            exit
+        fi
+    fi
+}
+
+function config_vim {
+
+    echo "Configuring VIM"
+
+    cd $rootdir
+    rm .vimrc
+    wget https://raw.githubusercontent.com/AlaudaeHong/vimrc/master/.vimrc
+    git clone https://github.com/VundleVim/Vundle.vim.git ${rootdir}/.vim/bundle/Vundle.vim
+
+    if [ $usrdir != $rootdir ]; then
+        cd $usrdir
+
+            rm .vimrc
+        wget https://raw.githubusercontent.com/AlaudaeHong/vimrc/master/.vimrc
+        git clone https://github.com/VundleVim/Vundle.vim.git ${usrdir}/.vim/bundle/Vundle.vim
+    fi
+
+    vim +PluginInstall +qall
+}
+
+echo "Making directorys"
+checkDIR /root bin
+checkDIR /root .vim
+
+if [ $usrdir == $rootdir ]; then
+    checkDIR ~ bin
+    checkDIR ~ .vim
 fi
 
 echo "Installing self-made script"
-#install SSH_Remote script
-ls ~/bin/SSH_Remote > /dev/null
-if [ $? -ne 0 ]; then
-    wget https://raw.githubusercontent.com/AlaudaeHong/BashScripts/master/SSH_QuickConnection/SSH_Remote
-    chmod +x SSH_Remote
-fi
 
-#install SysUpdate script
-ls ~/bin/SysUpdate > /dev/null
-if [ $? -ne 0 ]; then
-    wget https://raw.githubusercontent.com/AlaudaeHong/BashScripts/master/SysUpdate/SysUpdate
-    chmod +x SysUpdate
-fi
+#For root user
+install_script $rootdir/bin SysUpdate/SysUpdate SysUpdate
+
+#For normal user
+install_script $usrdir/bin SSH_QuickConnection/SSH_Remote SSH_Remote
 
 #Source .profile again
 source ~/.bash_profile
@@ -32,67 +97,15 @@ echo "Updating System"
 SysUpdate
 
 #Install VIM
-which vi > /dev/null
-if [ $? -eq 1 ]; then
-    echo "Missing vim, try to install"
-    sudo apt-get install vim
-
-    if [ $? -eq 1 ]; then
-        echo "Cannot install vim....EXITING"
-        exit
-    fi
-fi
+install_apt     vim     1
 
 #Install Git
-which git > /dev/null
-if [ $? -eq 1 ]; then
-    echo "Missing git, try to install"
-    sudo apt-get install git
-    
-    if [ $? -eq 1 ]; then
-        echo "Cannot install git....EXITING"
-        exit
-    fi
-fi
+install_apt     git     1
 
 #Dependency for VIM plugin Tagbar
-which ctags > /dev/null
-if [ $? -eq 1 ]; then
-    echo "Missing ctags, try to install"
-    sudo apt-get install ctags
-    
-    if [ $? -eq 1 ]; then
-        echo "Cannot install ctags....EXITING"
-        exit
-    fi
-fi
+install_apt     ctags   1
 
 #Option of CScope
-which cscope > /dev/null
-if [ $? -eq 1 ]; then
-    echo "Install CScope? [Y/n]"
-    read ans
-    
-    if [ $ans == "Y" ]; then 
-        echo "Installing CScope"
-        
-        sudo apt-get install cscope
-    
-        if [ $? -eq 1 ]; then
-            echo "Cannot install CScope.... Manual installation needed"
-        fi
-    fi
-fi
+install_apt     cscope  $ifcscope
 
-cd
-
-ls .vim
-if [ $? -eq 1 ]; then
-    echo "Making .vim directory"
-    mkdir .vim
-fi
-
-echo "Configuring VIM"
-wget https://raw.githubusercontent.com/AlaudaeHong/vimrc/master/.vimrc
-git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-vim +PluginInstall +qall
+config_vim
