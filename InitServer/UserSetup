@@ -64,7 +64,7 @@ function config_vim {
     if [ $usrdir != $rootdir ]; then
         cd $usrdir
 
-            rm .vimrc
+        rm .vimrc
         wget https://raw.githubusercontent.com/AlaudaeHong/vimrc/master/.vimrc
         git clone https://github.com/VundleVim/Vundle.vim.git ${usrdir}/.vim/bundle/Vundle.vim
     fi
